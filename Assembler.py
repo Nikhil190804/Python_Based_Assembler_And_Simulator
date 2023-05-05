@@ -1,7 +1,7 @@
 def find_type_of_instruction(str):          # func to find the type of instruction 
     instruction=str.split()[0]
     if(instruction in possible_instructuion):
-        return possible_instructuion[i]
+        return possible_instructuion[instruction]
     else:
         return -1
     
