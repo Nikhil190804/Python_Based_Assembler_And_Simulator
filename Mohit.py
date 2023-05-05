@@ -35,8 +35,8 @@ def assemble(instruction):
     else:
         raise ValueError('incorrect registers: {}'.format(operands3)) #error if incorrect register number'''
 
-    return opcode_bin + '_' + operands_bin1 + operands_bin2 + operands_bin3
-assembly_code = 'add R1 R2 R3'
+    return opcode_bin + '_' + operands_bin1 + '_' + operands_bin2 + '_' +operands_bin3
+assembly_code = 'and R9 R2 R3'
 binary_code = assemble(assembly_code)
 print(binary_code)
 
