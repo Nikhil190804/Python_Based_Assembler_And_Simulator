@@ -1,0 +1,15 @@
+
+
+
+
+add r1 r2 r2
+
+sub r4 r5 r5
+mul r3 r4 r5
+
+addr r3 r4 r1
+
+add r2 r3 r4
+
+
+hlt
