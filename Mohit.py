@@ -1,12 +1,12 @@
 opcode={"add":"00000","sub":"00001","mul":"00110","xor":"01010","or":"01011","and":"01100"}
 registers={"R0":"000","R1":"001","R2":"010","R3":"011","R4":"100","R5":"101","R6":"110","FLAGS":"111"}
 
-def assemble(instruction):
+def assemble(instruct):
 
     try:
-        opcode, operands1,operands2,operands3 = instruction.split(' ')
+        opcode, operands1,operands2,operands3 = instruct.split(' ')
     except ValueError:
-        raise ValueError('Invalid instruction: {}'.format(instruction))
+        raise ValueError('Invalid instruction: {}'.format(instruct))
 
     if opcode == 'add':
         opcode_bin = '00000_00'

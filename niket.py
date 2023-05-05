@@ -11,7 +11,19 @@ d={"R1":"001",
 # # type D instructions and opcode store
 ld="00100"
 st="00101"
-
+add="00000"
+sub="00001"
+mul="00110"
+xor="01010"
+Or="01011"
+And="01100"
+movi="00010"
+rsi="01000"
+lsi="01001"
+mov="00011"
+div="00111"
+Not="01101"
+com="01110"
 
 # # type f
 hlt=11010
@@ -42,12 +54,54 @@ possible_instructuion={              #dict for type of instruction
    "hlt": "F"
 }
 #  
-def type_A():
-    print()
-def type_B():
-    print()
-def type_C():
-    print()
+def type_A(instruct):
+    if instruct[0]=="add":
+        print(add,end="")
+    elif instruct[0]=="sub":
+        print(sub,end="")
+    elif instruct[0]=="mul":
+        print(mul,end="")
+    elif instruct[0]=="xor":
+        print(xor,end="")
+    elif instruct[0]=="or":
+        print(Or,end="")
+    elif instruct[0]=="and":
+        print(And,end="")
+    print("00",end="")
+    print(d[instruct[1]],end="")
+    print(d[instruct[2]],end="")
+    print(d[instruct[3]])
+    
+
+def type_B(instruct):
+    if instruct[0]=="mov":
+        print(movi,end="")
+    elif instruct[0]=="ls":
+        print(lsi,end="")
+    elif instruct[0]=="rs":
+        print(rsi,end="")
+    print("0",end="")
+    print(d[instruct[1]],end="")
+    string=instruct[2]
+    number = int(''.join(filter(str.isdigit, string)))
+    fg = format(number, '07b')
+    print(fg)
+
+
+def type_C(instruct):
+
+    if instruct[0]=="mov":
+        print(mov,end="")
+    elif instruct[0]=="div":
+        print(div,end="")
+    elif instruct[0]=="not":
+        print(Not,end="")
+    elif instruct[0]=="cmp":
+        print(com,end="")
+    
+    print("00000",end="")
+    print(d[instruct[1]],end="")
+    print(d[instruct[2]])
 
 
 
@@ -88,9 +142,9 @@ def type_E(instruct,line_counter):
 
 
 
-def find_type_of_instruction (instruct[0]):          # func to find the type of instruction 
-    if(instruct[0] in possible_instructuion):
-        return possible_instructuion[instruct[0]]
+def find_type_of_instruction (instruct):          # func to find the type of instruction 
+    if(instruct in possible_instructuion):
+        return possible_instructuion[instruct]
     else:
         return -1
     
@@ -102,13 +156,15 @@ def find_type_of_instruction (instruct[0]):          # func to find the type of 
 
 with open("instructions.txt", "r") as file:
     instructions = file.readlines()
-print(instructions)
 
 
 
-count=-1
+
+count=0
 for j in instructions:
-    if j[0]!=var:
+    ins = j.strip().split()
+    if ins[0]!="var":
+        
         count +=1
 
 
@@ -120,7 +176,7 @@ for instruction in instructions:
     result=find_type_of_instruction(instruct[0])
 
 
-    if ((instruct[0])=="hlt"):
+    if ((instruct[-1])=="hlt"):
         print(hlt,end="")
         print("0"*11)
         break
@@ -135,12 +191,23 @@ for instruction in instructions:
 
 
     else:
+        temp=str(instruct[-1])
+        
         if result !=-1:
             if(result=="A"):
                 type_A(instruct)
-            elif result=='B' or result=='C' or result=='B&C':
-                #pinkykocall
-                print("b&c")
+            elif result=='B' and temp[0]=="$":
+                type_B(instruct)
+            elif result=='C' and temp[0]!="$":
+                
+                type_C(instruct)
+            elif result=='B&C':
+                if temp[0]=="$":
+                
+                    type_B(instruct)
+                else:
+                    type_C(instruct)
+
             elif result=='D':
                 type_D(instruct)
             elif result=='E':
@@ -151,13 +218,13 @@ for instruction in instructions:
             break
     line_counter+=1
 
+
     
 
     
     
         
         
-
 
 
 
