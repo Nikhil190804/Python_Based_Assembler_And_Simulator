@@ -23,20 +23,20 @@ def assemble(instruction):
     else:
         raise ValueError('Unsupported opcode: {}'.format(opcode))
     if operands1 in registers.keys() :
-        operands_bin = registers.get(operands1) #getting register code
+        operands_bin1 = registers.get(operands1) #getting register code
     else:
         raise ValueError('incorrect registers: {}'.format(operands1)) #error if incorrect register number'''
     if operands2 in registers.keys() :
-        operands_bin = registers.get(operands2) #getting register code
+        operands_bin2 = registers.get(operands2) #getting register code
     else:
         raise ValueError('incorrect registers: {}'.format(operands2)) #error if incorrect register number'''
     if operands3 in registers.keys() :
-        operands_bin = registers.get(operands3) #getting register code
+        operands_bin3 = registers.get(operands3) #getting register code
     else:
         raise ValueError('incorrect registers: {}'.format(operands3)) #error if incorrect register number'''
 
-    return opcode_bin + '_' + operands_bin
-assembly_code = 'mul R0 R1 R2'
+    return opcode_bin + '_' + operands_bin1 + operands_bin2 + operands_bin3
+assembly_code = 'add R1 R2 R3'
 binary_code = assemble(assembly_code)
 print(binary_code)
 
