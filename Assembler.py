@@ -40,7 +40,7 @@ for i in file_reader:
                 #mohitkocall
                 print('a type')
             elif result=='B' or result=='C' or result=='B&C':
-                #pinkykocall
+                #pinkykocall 
                 print("b&c")
             elif result=='D' or result=='E' or result=='F':
                 #nikkocall

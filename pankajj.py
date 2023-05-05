@@ -1,4 +1,4 @@
-opcode_b={"mov":"00010","rs":"01000","ls":"01001","not":"01101"}
+opcode_b={"mov":"00010","rs":"01000","ls":"01001"}
 reg={"R0":"000","R1":"001","R2":"010","R3":"011","R4":"100","R5":"101","R6":"110","FLAGS":"111"}
 def decimalToBinary(n):#decimal conversions
     return bin(n).replace("0b", "").zfill(7) #converting it to 7 bit binary also convert decimal to binary
@@ -27,5 +27,5 @@ def type_b(command):
     else:
         raise ValueError('error,it should be less than 128') #error if incoreeect decimal input'''
     return op_b + '_0_'+ operands_bin+ '_' + decimalToBinary(int(s2)) #combining all
-assembly_code = 'ls R5 $11'
+assembly_code = 'mov R4 $100'
 print(type_b(assembly_code))

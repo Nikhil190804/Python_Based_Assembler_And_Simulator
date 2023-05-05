@@ -64,10 +64,6 @@ def type_D(instruct):
         print(d[instruct[1]],end="")#register
         print(var[instruct[2]])
 
-
-
-
-
 def type_E(instruct,line_counter):
     binary_line = format(line_counter-1, '07b')
     if instruct[0]=="jmp":
