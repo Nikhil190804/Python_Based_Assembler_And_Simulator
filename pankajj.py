@@ -1,3 +1,4 @@
+#TYPE B CODE BELOW
 opcode_b={"mov":"00010","rs":"01000","ls":"01001"}
 reg={"R0":"000","R1":"001","R2":"010","R3":"011","R4":"100","R5":"101","R6":"110","FLAGS":"111"}
 def decimalToBinary(n):#decimal conversions
@@ -29,3 +30,33 @@ def type_b(command):
     return op_b + '_0_'+ operands_bin+ '_' + decimalToBinary(int(s2)) #combining all
 assembly_code = 'mov R4 $100'
 print(type_b(assembly_code))
+
+#TYPE C CODE BELOW___________________________________________________________________________________________________________
+#_____________________________________________________________________________________________________________________________
+
+opcode_c={"mov":"00011","div":"00111","not":"01101","cmp":"01110"}
+reg={"R0":"000","R1":"001","R2":"010","R3":"011","R4":"100","R5":"101","R6":"110","FLAGS":"111"}
+
+def type_c(command):
+    try:
+        opcode, operand1,operand2= command.split(' ')#splitting into diffrents bit instructions
+    except ValueError:
+        raise ValueError('Invalid instruction: {}'.format(command)) #error if incoreect format
+    if opcode in opcode_c.keys(): # checking the opcode instruction present in dictionary for grtting error
+        op_b = opcode_c.get(opcode)
+            
+    else:
+        raise ValueError('Unsupported opcode: {}'.format(opcode)) #error if incoreeect opcode'''
+    
+    if operand1 in reg.keys() :
+        operands_bin1 = reg.get(operand1) #getting resister code
+    else:
+        raise ValueError('incorrect registor: {}'.format(operand1)) #error if incoreeect register1 number'''
+    if operand2 in reg.keys() :
+        operands_bin2 = reg.get(operand2) #getting resister code
+    else:
+        raise ValueError('incorrect registor: {}'.format(operand2)) #error if incoreeect register2 number'''
+    
+    return op_b + '_00000_'+ operands_bin1+ '_' + operands_bin2 #combining all
+assembly_code = 'mov R5 R6'
+print(type_c(assembly_code))
