@@ -1,6 +1,7 @@
 # registers binary code
-# R0="000"
-d={"R1":"001",
+
+d={"R0":"000",
+   "R1":"001",
 "R2":"010",
 "R3":"011",
 "R4":"100",
@@ -26,7 +27,7 @@ Not="01101"
 com="01110"
 
 # # type f
-hlt=11010
+hlt="11010"
 
 # 
 var = {}
@@ -53,95 +54,103 @@ possible_instructuion={              #dict for type of instruction
    "jgt": "E",
    "hlt": "F"
 }
+list_output=[]
 #  
-def type_A(instruct):
+def type_A(instruct,list_output):
+    s=""
     if instruct[0]=="add":
-        print(add,end="")
+        s += add
     elif instruct[0]=="sub":
-        print(sub,end="")
+        s += sub
     elif instruct[0]=="mul":
-        print(mul,end="")
+        s += mul 
     elif instruct[0]=="xor":
-        print(xor,end="")
+        s += xor
     elif instruct[0]=="or":
-        print(Or,end="")
+        s += Or
     elif instruct[0]=="and":
-        print(And,end="")
-    print("00",end="")
-    print(d[instruct[1]],end="")
-    print(d[instruct[2]],end="")
-    print(d[instruct[3]])
+        s += And 
+    s += "00"
+    s += d[instruct[1]]
+    s += d[instruct[2]]
+    s += d[instruct[3]]
+    list_output.append(s)
+
+
+
     
 
-def type_B(instruct):
+def type_B(instruct,list_output):
+    s=""
     if instruct[0]=="mov":
-        print(movi,end="")
+        s += movi
     elif instruct[0]=="ls":
-        print(lsi,end="")
+        s += lsi
     elif instruct[0]=="rs":
-        print(rsi,end="")
-    print("0",end="")
-    print(d[instruct[1]],end="")
+        s += rsi
+    s += "0"
+    s += d[instruct[1]] 
     string=instruct[2]
     number = int(''.join(filter(str.isdigit, string)))
     fg = format(number, '07b')
-    print(fg)
+    s += fg
+    list_output.append(s)
 
 
-def type_C(instruct):
-
+def type_C(instruct,list_output):
+    s=""
     if instruct[0]=="mov":
-        print(mov,end="")
+        s += mov
     elif instruct[0]=="div":
-        print(div,end="")
+        s += div 
     elif instruct[0]=="not":
-        print(Not,end="")
+        s += Not
     elif instruct[0]=="cmp":
-        print(com,end="")
+        s += com
     
-    print("00000",end="")
-    print(d[instruct[1]],end="")
-    print(d[instruct[2]])
+    s += "00000"
+    s += d[instruct[1]]
+    s += d[instruct[2]]
 
+    instruct.append(s)
 
-
-def type_D(instruct):
-    
+def type_D(instruct,list_output):
+    s=""
     if instruct[0]=="ld":
-        print(ld,end="")
-        print(0,end="")#unused bit
-        print(d[instruct[1]],end="")#register
-        print(var[instruct[2]])
+        s += ld 
+        s += "0" #unused bit
+        s += d[instruct[1]] #register
+        s += var[instruct[2]]
     else:
-        print(st,end="")
-        print(0,end="")#unused bit
-        print(d[instruct[1]],end="")#register
-        print(var[instruct[2]])
+        s += st
+        s += "0" #unused bit
+        s += d[instruct[1]] #register
+        s += (var[instruct[2]])
+    list_output.append(s)
 
-def type_E(instruct,line_counter):
+def type_E(instruct,line_counter,list_output):
+    s=""
     binary_line = format(line_counter-1, '07b')
     if instruct[0]=="jmp":
-        print("01111",end="")
-        print("0000",end="")
-        print(binary_line)
+        s += "01111"
+        s += "0000"
+        s += binary_line
     elif instruct[0]=="jlt":
-        print("11100",end="")
-        print("0000",end="")
-        print(binary_line)
+        s += "11100"
+        s += "0000"
+        s += binary_line
     elif instruct[0]=="jgt":
-        print("11101",end="")
-        print("0000",end="")
-        print(binary_line)
+        s += "11101"
+        s += "0000"
+        s += binary_line
     else:
-        print("11111",end="")
-        print("0000",end="")
-        print(binary_line)
+        s += "11111"
+        s += "0000"
+        s += binary_line
+    list_output.append(s)
 
 
     
-
-
-
 def find_type_of_instruction (instruct):          # func to find the type of instruction 
     if(instruct in possible_instructuion):
         return possible_instructuion[instruct]
@@ -149,12 +158,10 @@ def find_type_of_instruction (instruct):          # func to find the type of ins
         return -1
     
 
-
-
 # main
 
 
-with open("instructions.txt", "r") as file:
+with open("input.txt", "r") as file:
     instructions = file.readlines()
 
 
@@ -174,11 +181,12 @@ for instruction in instructions:
 
     instruct = instruction.strip().split()
     result=find_type_of_instruction(instruct[0])
-
+    temp_s=""
 
     if ((instruct[-1])=="hlt"):
-        print(hlt,end="")
-        print("0"*11)
+        temp_s += hlt
+        temp_s += ("0"*11)
+        list_output.append(temp_s)
         break
     elif instruct==[]:
         pass
@@ -195,28 +203,31 @@ for instruction in instructions:
         
         if result !=-1:
             if(result=="A"):
-                type_A(instruct)
+                type_A(instruct,list_output)
             elif result=='B' and temp[0]=="$":
-                type_B(instruct)
+                type_B(instruct,list_output)
             elif result=='C' and temp[0]!="$":
                 
-                type_C(instruct)
+                type_C(instruct,list_output)
             elif result=='B&C':
                 if temp[0]=="$":
                 
-                    type_B(instruct)
+                    type_B(instruct,list_output)
                 else:
-                    type_C(instruct)
+                    type_C(instruct,list_output)
 
             elif result=='D':
-                type_D(instruct)
+                type_D(instruct,list_output)
             elif result=='E':
-                type_E(instruct,line_counter)
+                type_E(instruct,line_counter,list_output)
         else:
-            print("error has occurred in line:",end="")
-            print(line_counter,end="")
+            temp_s=""
+            temp_s += "error has occurred in line:"
+            temp_s += line_counter
+            list_output.append(temp_s)
             break
     line_counter+=1
+print(list_output)
 
 
     
