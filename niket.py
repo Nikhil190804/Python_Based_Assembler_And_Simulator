@@ -7,6 +7,7 @@ d={"R0":"000",
 "R4":"100",
 "R5":"101",
 "R6":"110",
+"FLAGS":"111"
 }
 
 # # type D instructions and opcode store
@@ -31,7 +32,7 @@ hlt="11010"
 
 # 
 var = {}
-register=["R0","R1","R2","R3","R4","R5","R6"]
+register=["R0","R1","R2","R3","R4","R5","R6","FLAGS"]
 
 #
 possible_instructuion={              #dict for type of instruction
@@ -158,31 +159,46 @@ def find_type_of_instruction (instruct):          # func to find the type of ins
         return -1
     
 
+
+def file_output(list_output):
+    file_handle=open("output.txt","w")
+    for i in list_output:
+        file_handle.write(i)
+        file_handle.write('\n')
+        file_handle.flush()
+    file_handle.close()
+
+def error_has_occurred(string):
+    file_handle=open("output.txt","w")
+    file_handle.write(string+"\n")
+    file_handle.close()
+
+
+
+
 # main
-
-
 with open("input.txt", "r") as file:
     instructions = file.readlines()
-
-
 
 
 count=0
 for j in instructions:
     ins = j.strip().split()
-    if ins[0]!="var":
-        
+    if(len(ins)<=1):
+        pass
+    elif( ins[0]!="var"):
         count +=1
+    else:
+        pass
 
 
 line_counter=0
-
+is_error=False
 for instruction in instructions:
 
     instruct = instruction.strip().split()
     result=find_type_of_instruction(instruct[0])
     temp_s=""
-
     if ((instruct[-1])=="hlt"):
         temp_s += hlt
         temp_s += ("0"*11)
@@ -221,24 +237,19 @@ for instruction in instructions:
             elif result=='E':
                 type_E(instruct,line_counter,list_output)
         else:
+            is_error=True
             temp_s=""
-            temp_s += "error has occurred in line:"
-            temp_s += line_counter
-            list_output.append(temp_s)
+            temp_s += "error has occurred in line:".title()
+            temp_s += str(line_counter+1)
             break
     line_counter+=1
+'''
+
 print(list_output)
-
-
-    
-
-    
-    
-        
-        
-
-
-
-
-
+output function here 
+'''
+if(is_error==True):
+    error_has_occurred(temp_s)
+else:
+    file_output(list_output)   #output function here
 

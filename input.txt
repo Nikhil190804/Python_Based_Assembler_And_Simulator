@@ -1,9 +1,11 @@
-var var1
-var var2
-var var3
-ld R1 var1
-ld R2 var2
-st R3 var3
+var pta_nhi_kon_sa_var
+var sabka_bar
+var mera_variable
+var pankaj_h_pinky
+ld R1 pta_nhi_kon_sa_var
+ld R2 sabka_bar
+st R3 mera_variable
+st FLAGS pankaj_h_pinky
 jmp hlt_label
 add R1 R2 R3
 hlt_label: hlt
