@@ -1,2 +1,2 @@
-Error Has Occurred In Line:7
-Variable Not Declared In The Beginning!!!
+Syntax Error
+Halt Not Found!!!

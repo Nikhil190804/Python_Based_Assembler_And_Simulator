@@ -32,7 +32,7 @@ hlt="11010"
 
 # 
 var = {}
-register=["R0","R1","R2","R3","R4","R5","R6","FLAGS"]
+register=["R0","R1","R2","R3","R4","R5","R6"]
 
 # a string of special chars for type b instn.
 special_chars="~`!@#$%^&*()_-=+{|}|:;'\"<>,.?/[]/*"
@@ -129,12 +129,24 @@ def type_B(instruct,list_output):
         s += rsi
     s += "0"
     value1=check_for_valid_registers(instruct[1])
-    if(value1==-1): #register is worng
+    if(value1==-1 and instruct[0]!="mov"): #register is worng
         error_string="register is invalid".title()
         list_of_errors.append(error_string)
         error_has_occurred()
     else:
-        s += d[instruct[1]]
+        if(instruct[0]=="mov"):
+            if( instruct[1]=="FLAGS"):   #this is added to insure the use of flags register is only for mov
+                s+="111"
+            else:
+                value1=check_for_valid_registers(instruct[1])
+                if(value1==-1):
+                    error_string="register is invalid".title()
+                    list_of_errors.append(error_string)
+                    error_has_occurred()
+                else:
+                    s+=d[instruct[1]]
+        else:
+            s += d[instruct[1]]
     result=check_for_valid_immediate_value(instruct[2])
     if(result==-1):
         list_of_errors.append("syntax error: invalid symbol!!!".title())
@@ -187,6 +199,7 @@ def type_D(instruct,list_output):
                 s += "0" #unused bit
                 s += d[instruct[1]] #register
                 s += var[instruct[2]]
+                list_output.append(s)
             else:
                 s += st
                 s += "0" #unused bit
@@ -251,11 +264,10 @@ for j in instructions:
         count +=1
     else:
         pass
-print(count)
-print(var)
 
 
 line_counter=0
+is_halt=False
 is_error=False
 is_variable=True
 for instruction in instructions:
@@ -269,6 +281,7 @@ for instruction in instructions:
         if instruct[0]!="var":
             is_variable=False
         if ((instruct[-1])=="hlt"):
+            is_halt=True
             temp_s += hlt
             temp_s += ("0"*11)
             list_output.append(temp_s)
@@ -311,6 +324,11 @@ for instruction in instructions:
 
 '''
 output function here 
-everthing has worked correctly
 '''
-file_output(list_output)   #output function here
+if(is_halt==True):
+    file_output(list_output)   #output function here
+else:
+    list_of_errors.append("halt not found!!!".title())
+    with open("output.txt","w") as f:
+        f.write("syntax error\n".title())
+        f.write(list_of_errors[0])
