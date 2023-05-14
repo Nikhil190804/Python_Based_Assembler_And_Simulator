@@ -272,7 +272,7 @@ is_error=False
 is_variable=True
 for instruction in instructions:
     if(len(instruction)<=1 or len(instruction.strip())<=1):
-        pass
+        line_counter-=1
     else:
         instruct = instruction.strip().split()
         print(instruct)
