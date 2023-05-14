@@ -63,7 +63,7 @@ ld R1 var1
 
 
 
-ld R2 var2
+ld R2 var10
 
 
 
@@ -217,14 +217,13 @@ st R3 var3
 
 
 
-jmp hlt_label
+jmp var1
 
 
 
 
 
 ld R4 var1
-
 
 
 

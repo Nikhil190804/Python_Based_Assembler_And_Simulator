@@ -215,6 +215,13 @@ def type_D(instruct,list_output):
 
 def type_E(instruct,line_counter,list_output):
     s=""
+    if(len(instruct)!=2):
+        list_of_errors.append("syntax error!!!".title())
+        error_has_occurred()
+    if(instruct[1] in var):
+        list_of_errors.append("illegal use of variables!!!".title())
+        error_has_occurred()
+    print(instruct)
     binary_line = format(line_counter-1, '07b')
     if instruct[0]=="jmp":
         s += "01111"
@@ -279,7 +286,7 @@ try:
             line_counter-=1
         else:
             instruct = instruction.strip().split()
-            print(instruct)
+            #print(instruct)
             result=find_type_of_instruction(instruct[0])
             temp_s=""
             if instruct[0]!="var":
