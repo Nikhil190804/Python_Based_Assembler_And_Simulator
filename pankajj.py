@@ -27,7 +27,7 @@ def type_b(command):
         s2=s1
     else:
         raise ValueError('error,it should be less than 128') #error if incoreeect decimal input for finding error'''
-    return op_b + '_0_'+ operands_bin+ '_' + decimalToBinary(int(s2)) #combining all for proper output
+    return op_b + '0'+ operands_bin + decimalToBinary(int(s2)) #combining all for proper output
 assembly_code = 'mov R4 $100'
 print(type_b(assembly_code))
 
@@ -57,6 +57,6 @@ def type_c(command):
     else:
         raise ValueError('incorrect registor: {}'.format(operand2)) #error if incoreeect register2 number for getting error'''
     
-    return op_b + '_00000_'+ operands_bin1+ '_' + operands_bin2 #combining all for proper output
+    return op_b + '00000'+ operands_bin1+ operands_bin2 #combining all for proper output
 assembly_code = 'mov R5 R6'
 print(type_c(assembly_code))
