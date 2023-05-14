@@ -64,12 +64,14 @@ list_of_errors=[]
 
 
 def error_has_occurred():
+    global is_unhandled_error
+    is_unhandled_error=True
     file_handle=open("output.txt","w")
     file_handle.write(f"Error Has Occurred In Line:{line_counter+1}\n")
     file_handle.write(list_of_errors[0])
     file_handle.close()
     print(list_of_errors)
-    exit(0)
+    exit(1)
 
 
 def check_for_valid_registers(string):
@@ -250,7 +252,7 @@ def file_output(list_output):
         file_handle.flush()
     file_handle.close()
 
-# main
+# main fucntion here
 with open("input.txt", "r") as file:
     instructions = file.readlines()
 
@@ -267,61 +269,69 @@ for j in instructions:
 
 
 line_counter=0
+is_unhandled_error=False
 is_halt=False
 is_error=False
 is_variable=True
-for instruction in instructions:
-    if(len(instruction)<=1 or len(instruction.strip())<=1):
-        line_counter-=1
-    else:
-        instruct = instruction.strip().split()
-        print(instruct)
-        result=find_type_of_instruction(instruct[0])
-        temp_s=""
-        if instruct[0]!="var":
-            is_variable=False
-        if ((instruct[-1])=="hlt"):
-            is_halt=True
-            temp_s += hlt
-            temp_s += ("0"*11)
-            list_output.append(temp_s)
-            break
-        elif instruct==[]:
-            pass
-        elif instruct[0]=="var":
-            if instruct[1] not in var:
-                binary = format(count, '07b')
-                var[instruct[1]]=binary
-                count +=1
-            if (is_variable==False):
-                # var is defined later 
-                list_of_errors.append("variable not declared in the beginning!!!".title())
-                error_has_occurred()
+try:
+    for instruction in instructions:
+        if(len(instruction)<=1 or len(instruction.strip())<=1):
+            line_counter-=1
         else:
-            temp=str(instruct[-1])
-            if result !=-1:
-                if(result=="A"):
-                    type_A(instruct,list_output)
-                elif result=='B' and temp[0] in special_chars:
-                    type_B(instruct,list_output)
-                elif result=='C' and temp[0] not in special_chars:
-                    type_C(instruct,list_output)
-                elif result=='B&C':
-                    if temp[0] in special_chars:
-                        type_B(instruct,list_output)
-                    else:
-                        type_C(instruct,list_output)
-                elif result=='D':
-                    type_D(instruct,list_output)
-                elif result=='E':
-                    type_E(instruct,line_counter,list_output)
-            else:
-                # instrution not found
-                list_of_errors.append("wrong instruction!!!".title())
-                error_has_occurred()
+            instruct = instruction.strip().split()
+            print(instruct)
+            result=find_type_of_instruction(instruct[0])
+            temp_s=""
+            if instruct[0]!="var":
+                is_variable=False
+            if ((instruct[-1])=="hlt"):
+                is_halt=True
+                temp_s += hlt
+                temp_s += ("0"*11)
+                list_output.append(temp_s)
                 break
-    line_counter+=1
-
+            elif instruct==[]:
+                pass
+            elif instruct[0]=="var":
+                if instruct[1] not in var:
+                    binary = format(count, '07b')
+                    var[instruct[1]]=binary
+                    count +=1
+                if (is_variable==False):
+                    # var is defined later 
+                    list_of_errors.append("variable not declared in the beginning!!!".title())
+                    error_has_occurred()
+            else:
+                temp=str(instruct[-1])
+                if result !=-1:
+                    if(result=="A"):
+                        type_A(instruct,list_output)
+                    elif result=='B' and temp[0] in special_chars:
+                        type_B(instruct,list_output)
+                    elif result=='C' and temp[0] not in special_chars:
+                        type_C(instruct,list_output)
+                    elif result=='B&C':
+                        if temp[0] in special_chars:
+                            type_B(instruct,list_output)
+                        else:
+                            type_C(instruct,list_output)
+                    elif result=='D':
+                        type_D(instruct,list_output)
+                    elif result=='E':
+                        type_E(instruct,line_counter,list_output)
+                else:
+                    # instrution not found
+                    list_of_errors.append("wrong instruction!!!".title())
+                    error_has_occurred()
+                    break
+        line_counter+=1
+except:
+    if(is_unhandled_error==False):
+        with open("output.txt","w") as f:
+            f.write("general syntax error!!!".title())
+        exit(1)
+    else:
+        exit(1)
 '''
 output function here 
 '''

@@ -223,7 +223,7 @@ jmp hlt_label
 
 
 
-add R1 R2 R3
+ld R4 var1
 
 
 
