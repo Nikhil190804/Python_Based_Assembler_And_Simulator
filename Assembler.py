@@ -59,6 +59,7 @@ possible_instructuion={              #dict for type of instruction
    "hlt": "F"
 }
 list_output=[]
+label_names={}
 #  
 list_of_errors=[]
 
@@ -178,13 +179,37 @@ def type_C(instruct,list_output):
     s += "00000"
     value1=check_for_valid_registers(instruct[1])
     value2=check_for_valid_registers(instruct[2])
-    if(value1==-1 or value2==-1):
+    if((value1==-1 or value2==-1) and (instruct[0]!="mov")):
         error_string="register is invalid".title()
         list_of_errors.append(error_string)
         error_has_occurred()
     else:
-        s += d[instruct[1]]
-        s += d[instruct[2]]
+        if(instruct[0]=="mov"):
+            if(instruct[1]=="FLAGS" or instruct[2]=="FLAGS"):
+                if(instruct[1]=="FLAGS" and instruct[2] in register):
+                    s+="111"
+                    s+=d[instruct[2]]
+                elif (instruct[2]=="FLAGS" and instruct[1] in register):
+                    s+=d[instruct[1]]
+                    s+="111"
+                elif (instruct[1]=="FLAGS" and instruct[2]=="FLAGS"):
+                    s+="111"
+                    s+="111"
+                else:
+                    list_of_errors.append("register is invalid!!!".title())
+                    error_has_occurred()
+            else:
+                value1=check_for_valid_registers(instruct[1])
+                value2=check_for_valid_registers(instruct[2])
+                if(value1==-1 or value2==-1):
+                    list_of_errors.append("register is invalid!!!".title())
+                    error_has_occurred()
+                else:
+                    s+=d[instruct[1]]
+                    s+=d[instruct[2]]
+        else:
+            s += d[instruct[1]]
+            s += d[instruct[2]]
     list_output.append(s)
 
 def type_D(instruct,list_output):
@@ -221,8 +246,8 @@ def type_E(instruct,line_counter,list_output):
     if(instruct[1] in var):
         list_of_errors.append("illegal use of variables!!!".title())
         error_has_occurred()
-    print(instruct)
     binary_line = format(line_counter-1, '07b')
+    label_names[instruct[1]+":"]=binary_line
     if instruct[0]=="jmp":
         s += "01111"
         s += "0000"
@@ -258,6 +283,46 @@ def file_output(list_output):
         file_handle.write('\n')
         file_handle.flush()
     file_handle.close()
+
+
+def label_handling(label_instruction):
+    #print(label_instruction)
+    try:
+        if(label_instruction[0] =="var"):
+            list_of_errors.append("invalid variable use in labels!!!".title())
+            error_has_occurred()
+        val=find_type_of_instruction(label_instruction[0])
+        if(val!=-1):
+            if(val=="A"):
+                type_A(label_instruction,list_output)
+            elif (val=="B"):
+                type_B(label_instruction,list_output)
+            elif (val=="C"):
+                type_C(label_instruction,list_output)
+            elif (val=="B&C"):
+                just_a_temp_str=str(label_instruction[-1])
+                if(just_a_temp_str[0] in special_chars):
+                    type_B(label_instruction,list_output)
+                else:
+                    type_C(label_instruction,list_output)
+            elif (val=="D"):
+                type_D(label_instruction,list_output)
+            elif (val=="E"):
+                pass
+                #add code here
+            else:
+                list_of_errors.append("invalid instruction in memory address!!!".title())
+                error_has_occurred()
+        else:
+            list_of_errors.append("invalid instruction in memory address!!!".title())
+            error_has_occurred()
+    except:
+        list_of_errors.append("invalid instruction in memory address!!!".title())
+        error_has_occurred()
+
+
+
+    
 
 # main fucntion here
 with open("input.txt", "r") as file:
@@ -328,9 +393,16 @@ try:
                         type_E(instruct,line_counter,list_output)
                 else:
                     # instrution not found
-                    list_of_errors.append("wrong instruction!!!".title())
-                    error_has_occurred()
-                    break
+                    if(instruct[1] in possible_instructuion):
+                        #valid
+                        if(instruct[0] not in label_names):
+                            bin_format_of_label = format(line_counter-1, '07b')
+                            label_names[instruct[0]]=bin_format_of_label
+                            label_handling(instruct[1:])
+                    else:
+                        list_of_errors.append("wrong instruction!!!".title())
+                        error_has_occurred()
+                        break
         line_counter+=1
 except:
     if(is_unhandled_error==False):
@@ -342,6 +414,7 @@ except:
 '''
 output function here 
 '''
+#print(label_names)
 if(is_halt==True):
     file_output(list_output)   #output function here
 else:
