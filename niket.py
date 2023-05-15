@@ -180,17 +180,19 @@ def error_has_occurred(string):
 with open("input.txt", "r") as file:
     instructions = file.readlines()
 
-
+label_collection={}
 count=0
 for j in instructions:
     ins = j.strip().split()
     if(len(ins)<=1):
         pass
     elif( ins[0]!="var"):
+        if(ins[1] in possible_instructuion and ins[0][-1]==":"):
+            if ins[0] not in label_collection:
+                label_collection[ins[0]]=format(count, '07b')
         count +=1
     else:
         pass
-
 
 line_counter=0
 is_error=False

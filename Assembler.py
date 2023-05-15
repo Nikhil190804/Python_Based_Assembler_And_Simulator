@@ -56,12 +56,33 @@ possible_instructuion={              #dict for type of instruction
    "jmp": "E",
    "jlt": "E",
    "jgt": "E",
+   "je":"E",
    "hlt": "F"
 }
 list_output=[]
 label_names={}
+label_collection={}
 #  
 list_of_errors=[]
+
+
+def is_halt_at_last():
+    with open("input.txt",'r') as f:
+        data=f.readlines()
+    data=data[::-1]
+    for i in data:
+        instrn=i.strip().split()
+        if(len(instrn)<=1 and instrn==[]):
+            pass # a empty line
+        else:
+            if(instrn[-1]=="hlt"):
+                # hlt is at last
+                break
+            else:
+                list_of_errors.append("hlt instruction is not at last!!!".title())
+                with open("output.txt","w") as f:
+                    f.write(list_of_errors[0])
+                    exit(1)
 
 
 def error_has_occurred():
@@ -71,7 +92,6 @@ def error_has_occurred():
     file_handle.write(f"Error Has Occurred In Line:{line_counter+1}\n")
     file_handle.write(list_of_errors[0])
     file_handle.close()
-    print(list_of_errors)
     exit(1)
 
 
@@ -238,16 +258,19 @@ def type_D(instruct,list_output):
             error_has_occurred()
 
 
-def type_E(instruct,line_counter,list_output):
+def type_E(instruct,list_output):
     s=""
     if(len(instruct)!=2):
-        list_of_errors.append("syntax error!!!".title())
+        list_of_errors.append("operands not satisfied!!!".title())
         error_has_occurred()
     if(instruct[1] in var):
         list_of_errors.append("illegal use of variables!!!".title())
         error_has_occurred()
-    binary_line = format(line_counter-1, '07b')
-    label_names[instruct[1]+":"]=binary_line
+    if((instruct[1]+":") in label_collection):
+        binary_line=label_collection[instruct[1]+":"]
+    else:
+        list_of_errors.append("label is not declared and tried to used!!!".title())
+        error_has_occurred()
     if instruct[0]=="jmp":
         s += "01111"
         s += "0000"
@@ -286,7 +309,6 @@ def file_output(list_output):
 
 
 def label_handling(label_instruction):
-    #print(label_instruction)
     try:
         if(label_instruction[0] =="var"):
             list_of_errors.append("invalid variable use in labels!!!".title())
@@ -308,8 +330,9 @@ def label_handling(label_instruction):
             elif (val=="D"):
                 type_D(label_instruction,list_output)
             elif (val=="E"):
-                pass
+                type_E(label_instruction,list_output)
                 #add code here
+                #if(len(label_instruction)!=2):
             else:
                 list_of_errors.append("invalid instruction in memory address!!!".title())
                 error_has_occurred()
@@ -325,6 +348,10 @@ def label_handling(label_instruction):
     
 
 # main fucntion here
+
+# checking for halt is at last or not
+
+is_halt_at_last()
 with open("input.txt", "r") as file:
     instructions = file.readlines()
 
@@ -335,11 +362,14 @@ for j in instructions:
     if(len(ins)<=1):
         pass
     elif( ins[0]!="var"):
+        if(ins[1] in possible_instructuion and ins[0][-1]==":"):
+            if ins[0] not in label_collection:
+                label_collection[ins[0]]=format(count, '07b')
         count +=1
     else:
         pass
 
-
+count+=1
 line_counter=0
 is_unhandled_error=False
 is_halt=False
@@ -351,7 +381,6 @@ try:
             line_counter-=1
         else:
             instruct = instruction.strip().split()
-            #print(instruct)
             result=find_type_of_instruction(instruct[0])
             temp_s=""
             if instruct[0]!="var":
@@ -390,15 +419,19 @@ try:
                     elif result=='D':
                         type_D(instruct,list_output)
                     elif result=='E':
-                        type_E(instruct,line_counter,list_output)
+                        type_E(instruct,list_output)
                 else:
                     # instrution not found
-                    if(instruct[1] in possible_instructuion):
-                        #valid
-                        if(instruct[0] not in label_names):
-                            bin_format_of_label = format(line_counter-1, '07b')
-                            label_names[instruct[0]]=bin_format_of_label
+                    if(instruct[1] in possible_instructuion):      #valid 
+                        if(instruct[0]  in label_collection):
                             label_handling(instruct[1:])
+                        else:
+                            if (instruct[0][-1]!=":"):
+                                list_of_errors.append("label is not followed by colon!!!".title())
+                                error_has_occurred()
+                            else:
+                                list_of_errors.append("general syntax error!!!".title())
+                                error_has_occurred()
                     else:
                         list_of_errors.append("wrong instruction!!!".title())
                         error_has_occurred()
