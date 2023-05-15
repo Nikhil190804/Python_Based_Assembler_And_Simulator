@@ -41,7 +41,9 @@ def assemble(instruct):
     else:
         raise ValueError('incorrect registers: {}'.format(operands3)) #error if incorrect register number'''
 
+  # Concatenate the binary codes and return the result
     return opcode_bin + '_' + operands_bin1 + '_' + operands_bin2 + '_' +operands_bin3
+# Test the assemble function with an example assembly code
 assembly_code = 'and R1 R2 R3'
 binary_code = assemble(assembly_code)
 print(binary_code)
