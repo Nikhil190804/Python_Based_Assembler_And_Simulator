@@ -359,7 +359,7 @@ with open("input.txt", "r") as file:
 count=0
 for j in instructions:
     ins = j.strip().split()
-    if(len(ins)<=1):
+    if(len(ins)<=1):          #this block is used to generate the binary of labels 
         pass
     elif( ins[0]!="var"):
         if(ins[1] in possible_instructuion and ins[0][-1]==":"):
