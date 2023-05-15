@@ -92,7 +92,6 @@ def error_has_occurred():
     file_handle.write(f"Error Has Occurred In Line:{line_counter+1}\n")
     file_handle.write(list_of_errors[0])
     file_handle.close()
-    print(list_of_errors)
     exit(1)
 
 
