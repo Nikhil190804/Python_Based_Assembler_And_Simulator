@@ -6,12 +6,13 @@ registers={"R0":"000","R1":"001","R2":"010","R3":"011","R4":"100","R5":"101","R6
 def assemble(instruct):
 
 
+    # Split the instruction into opcode and operands
     try:
         opcode, operands1,operands2,operands3 = instruct.split(' ')
     except ValueError:
         raise ValueError('Invalid instruction: {}'.format(instruct))
 
-  
+  # Convert the opcode to binary code  
     if opcode == 'add':
         opcode_bin = '00000_00'
     elif opcode=='sub':
@@ -26,6 +27,7 @@ def assemble(instruct):
         opcode_bin='01100_00'            
     else:
         raise ValueError('Unsupported opcode: {}'.format(opcode))
+      # Convert the operands to binary code
     if operands1 in registers.keys() :
         operands_bin1 = registers.get(operands1) #getting register code
     else:
