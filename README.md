@@ -12,4 +12,4 @@ Group Members Details:-
   
 This is the repository for our group project for computer organization course .  
 # The main script for running the assembler is "Assembler.py". 
-Due to sudden change in format of the input and output we were not able to figure out that in the given deadline , so please cinsider our latest commit.
+Due to sudden change in format of the input and output we were not able to figure out that in the given deadline , so please consider our latest commit.
