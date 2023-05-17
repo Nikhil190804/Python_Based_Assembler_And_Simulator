@@ -389,9 +389,9 @@ is_halt_at_last(data)
 count=0
 for j in instructions:
     ins = j.strip().split()
-    if(len(ins)<=1):          #this block is used to generate the binary of labels 
+    if(ins==[]):          #this block is used to generate the binary of labels 
         pass
-    if(ins[-1]=="hlt"):
+    elif ins[0]=="hlt":
         count+=1
     elif( ins[0]!="var"):
         if(ins[1] in possible_instructuion and ins[0][-1]==":"):
@@ -489,3 +489,4 @@ else:
     '''with open("output.txt","w") as f:
         f.write("syntax error\n".title())
         f.write(list_of_errors[0])'''
+    
