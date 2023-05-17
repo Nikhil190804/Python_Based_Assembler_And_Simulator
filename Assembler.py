@@ -64,11 +64,9 @@ label_names={}
 label_collection={}
 #  
 list_of_errors=[]
+instructions=[]
 
-
-def is_halt_at_last():
-    with open("input.txt",'r') as f:
-        data=f.readlines()
+def is_halt_at_last(data):
     data=data[::-1]
     for i in data:
         instrn=i.strip().split()
@@ -80,18 +78,22 @@ def is_halt_at_last():
                 break
             else:
                 list_of_errors.append("hlt instruction is not at last!!!".title())
-                with open("output.txt","w") as f:
+                print(list_of_errors[0],end="")
+                exit(1)
+                '''with open("output.txt","w") as f:
                     f.write(list_of_errors[0])
-                    exit(1)
+                    exit(1)'''
 
 
 def error_has_occurred():
     global is_unhandled_error
     is_unhandled_error=True
-    file_handle=open("output.txt","w")
+    print(f"Error in Line:{line_counter+1}\n",end="")
+    print(list_of_errors[0],end="")
+    '''file_handle=open("output.txt","w")
     file_handle.write(f"Error Has Occurred In Line:{line_counter+1}\n")
     file_handle.write(list_of_errors[0])
-    file_handle.close()
+    file_handle.close()'''
     exit(1)
 
 
@@ -104,6 +106,9 @@ def check_for_valid_registers(string):
 
 def type_A(instruct,list_output):
     s=""
+    if(len(instruct)!=4):
+        list_of_errors.append("parameters not satisfied!!!".title())
+        error_has_occurred()
     if instruct[0]=="add":
         s += add
     elif instruct[0]=="sub":
@@ -144,6 +149,9 @@ def check_for_valid_immediate_value(string):
 
 def type_B(instruct,list_output):
     s=""
+    if(len(instruct)!=3):
+        list_of_errors.append("parameters not satisfied!!!".title())
+        error_has_occurred()
     if instruct[0]=="mov":
         s += movi
     elif instruct[0]=="ls":
@@ -187,6 +195,9 @@ def type_B(instruct,list_output):
 
 def type_C(instruct,list_output):
     s=""
+    if(len(instruct)!=3):
+        list_of_errors.append("parameters not satisfied!!!".title())
+        error_has_occurred()
     if instruct[0]=="mov":
         s += mov
     elif instruct[0]=="div":
@@ -234,6 +245,9 @@ def type_C(instruct,list_output):
 
 def type_D(instruct,list_output):
     s=""
+    if(len(instruct)!=3):
+        list_of_errors.append("parameters not satisfied!!!".title())
+        error_has_occurred()
     value1=check_for_valid_registers(instruct[1])
     if(value1==-1):
         error_string="register is invalid".title()
@@ -261,7 +275,7 @@ def type_D(instruct,list_output):
 def type_E(instruct,list_output):
     s=""
     if(len(instruct)!=2):
-        list_of_errors.append("operands not satisfied!!!".title())
+        list_of_errors.append("parameters not satisfied!!!".title())
         error_has_occurred()
     if(instruct[1] in var):
         list_of_errors.append("illegal use of variables!!!".title())
@@ -269,7 +283,7 @@ def type_E(instruct,list_output):
     if((instruct[1]+":") in label_collection):
         binary_line=label_collection[instruct[1]+":"]
     else:
-        list_of_errors.append("label is not declared and tried to used!!!".title())
+        list_of_errors.append("label is not declared and tried to use!!!".title())
         error_has_occurred()
     if instruct[0]=="jmp":
         s += "01111"
@@ -300,12 +314,18 @@ def find_type_of_instruction (instruct):          # func to find the type of ins
 
 
 def file_output(list_output):
+    end_len=len(list_output)
+    for i in range(0,end_len):
+        print(list_output[i],end="")
+        if(i!=end_len-1):
+            print("\n",end="")
+    '''
     file_handle=open("output.txt","w")
     for i in list_output:
         file_handle.write(i)
         file_handle.write('\n')
         file_handle.flush()
-    file_handle.close()
+    file_handle.close()'''
 
 
 def label_handling(label_instruction):
@@ -351,9 +371,19 @@ def label_handling(label_instruction):
 
 # checking for halt is at last or not
 
-is_halt_at_last()
-with open("input.txt", "r") as file:
-    instructions = file.readlines()
+while True:
+    try:
+        line=input()
+        line=line.strip()
+        if(line!=""):
+            instructions.append(line)
+    except EOFError:
+        break
+        
+'''with open("input.txt", "r") as file:
+    instructions = file.readlines()'''
+data=instructions.copy()
+is_halt_at_last(data)
 
 
 count=0
@@ -439,8 +469,9 @@ try:
         line_counter+=1
 except:
     if(is_unhandled_error==False):
-        with open("output.txt","w") as f:
-            f.write("general syntax error!!!".title())
+        print("general syntax error!!!".title(),end="")
+        '''with open("output.txt","w") as f:
+            f.write("general syntax error!!!".title())'''
         exit(1)
     else:
         exit(1)
@@ -452,6 +483,8 @@ if(is_halt==True):
     file_output(list_output)   #output function here
 else:
     list_of_errors.append("halt not found!!!".title())
-    with open("output.txt","w") as f:
+    print("syntax error \n".title(),end="")
+    print(list_of_errors[0],end="")
+    '''with open("output.txt","w") as f:
         f.write("syntax error\n".title())
-        f.write(list_of_errors[0])
+        f.write(list_of_errors[0])'''
