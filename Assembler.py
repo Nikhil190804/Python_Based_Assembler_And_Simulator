@@ -391,6 +391,8 @@ for j in instructions:
     ins = j.strip().split()
     if(len(ins)<=1):          #this block is used to generate the binary of labels 
         pass
+    if(ins[-1]=="hlt"):
+        count+=1
     elif( ins[0]!="var"):
         if(ins[1] in possible_instructuion and ins[0][-1]==":"):
             if ins[0] not in label_collection:
@@ -399,7 +401,6 @@ for j in instructions:
     else:
         pass
 
-count+=1
 line_counter=0
 is_unhandled_error=False
 is_halt=False
