@@ -11,6 +11,7 @@ Group Members Details:-
   
   
 This is the repository for our group project for computer organization course .  
-The main script for running the assembler is "Assembler.py". 
-The input should be given to "input.txt".
-The output will be generated in "output.txt"
+# The main script for running the assembler is "Assembler.py". 
+# The input should be given to "input.txt".
+# The output will be generated in "output.txt"
+# The input needs to be given one by one in the file "input.txt"

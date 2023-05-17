@@ -1,2 +1,0 @@
-Error Has Occurred In Line:5
-Variable Is Not Declared!!!
