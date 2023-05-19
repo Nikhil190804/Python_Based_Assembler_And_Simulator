@@ -11,5 +11,5 @@ Group Members Details:-
   
   
 This is the repository for our group project for computer organization course .  
-# The main script for running the assembler is "Assembler.py". 
-Due to sudden change in format of the input and output we were not able to figure out that in the given deadline , so please consider our latest commit.
+We have added all the three folders which were given to us. And it contains the main script "Assembler.py" inside the Simple-Assembler folder , the run file inside it also contains the mentioned commands to run . 
+But by chance , if anything  fails then we have added the main script "Assembler.py" as alone to the repository . Although everthing is working fine from our end .  
