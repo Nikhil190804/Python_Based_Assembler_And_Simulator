@@ -383,23 +383,30 @@ while True:
 '''with open("input.txt", "r") as file:
     instructions = file.readlines()'''
 data=instructions.copy()
-is_halt_at_last(data)
 
 
 count=0
-for j in instructions:
-    ins = j.strip().split()
-    if(ins==[]):          #this block is used to generate the binary of labels 
-        pass
-    elif ins[0]=="hlt":
-        count+=1
-    elif( ins[0]!="var"):
-        if(ins[1] in possible_instructuion and ins[0][-1]==":"):
-            if ins[0] not in label_collection:
-                label_collection[ins[0]]=format(count, '07b')
-        count +=1
-    else:
-        pass
+line=1
+try:
+    for j in instructions:
+        ins = j.strip().split()
+        if(ins==[]):          #this block is used to generate the binary of labels 
+            pass
+        elif ins[0]=="hlt":
+            count+=1
+            line+=1
+        elif( ins[0]!="var"):
+            if(ins[1] in possible_instructuion and ins[0][-1]==":"):
+                if ins[0] not in label_collection:
+                    label_collection[ins[0]]=format(count, '07b')
+            count +=1
+            line+=1
+        else:
+            line+=1
+except:
+    print(f"error has occurred in line:{line}\n".title(),end="")
+    print("instruction undefined!!!".title(),end="")
+    exit(1)
 
 line_counter=0
 is_unhandled_error=False
@@ -481,6 +488,7 @@ output function here
 '''
 #print(label_names)
 if(is_halt==True):
+    is_halt_at_last(instructions)
     file_output(list_output)   #output function here
 else:
     list_of_errors.append("halt not found!!!".title())
