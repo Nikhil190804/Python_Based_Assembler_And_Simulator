@@ -390,7 +390,8 @@ line=1
 try:
     for j in instructions:
         ins = j.strip().split()
-        if(ins==[]):          #this block is used to generate the binary of labels 
+        if(ins==[]
+        ):          #this block is used to generate the binary of labels 
             pass
         elif ins[0]=="hlt":
             count+=1
@@ -413,6 +414,32 @@ is_unhandled_error=False
 is_halt=False
 is_error=False
 is_variable=True
+
+
+'''
+this block is used to check for multiple halts
+'''
+halt_counter=0
+try:
+    for instruction in instructions:
+        if(len(instruction)<=1 or len(instruction.strip())<=1):
+            pass
+        else:
+            instruct=instruction.strip().split()
+            if(instruct[-1]=="hlt"):
+                halt_counter+=1
+            else:
+                pass
+except:
+    print("instruction undefined!!!".title(),end="")
+    exit(1)
+
+# now adding condition to check for multiple halts
+if(halt_counter>1):
+    print("halt encountered more than one time !!!".title())
+    exit(1)
+
+
 try:
     for instruction in instructions:
         if(len(instruction)<=1 or len(instruction.strip())<=1):
