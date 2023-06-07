@@ -471,6 +471,9 @@ try:
         elif ins[0]=="hlt":
             count+=1
             line+=1
+        elif ins[0]=="clr":
+            count+=1
+            line+=1
         elif( ins[0]!="var"):
             if(ins[1] in possible_instructuion and ins[0][-1]==":"):
                 if ins[0] not in label_collection:
