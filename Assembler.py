@@ -35,7 +35,7 @@ var = {}
 register=["R0","R1","R2","R3","R4","R5","R6"]
 
 # a string of special chars for type b instn.
-special_chars="~`!@#$%^&*()_-=+{|}|:;'\"<>,.?/[]/*"
+special_chars="~`!@#$%^&()_-=+{|}|:;'\"<>,.?/[]/"
 
 #
 possible_instructuion={              #dict for type of instruction
@@ -57,7 +57,12 @@ possible_instructuion={              #dict for type of instruction
    "jlt": "E",
    "jgt": "E",
    "je":"E",
-   "hlt": "F"
+   "hlt": "F",
+   "clr":"G",
+   "adi":"H",
+   "exp":"I",
+   "inc":"J",
+   "dec":"K"
 }
 list_output=[]
 label_names={}
@@ -134,6 +139,75 @@ def type_A(instruct,list_output):
         s += d[instruct[2]]
         s += d[instruct[3]]
     list_output.append(s)
+
+
+
+def type_G(instruct,list_output):
+    s=""
+    s += "11001"
+    s += "0"*11
+    list_output.append(s)
+
+def type_H(instruct,list_output):
+    s=""
+    s += "11110"
+    s += "0"
+    val1=check_for_valid_registers(instruct[1])
+    if(val1==-1):
+        error_string="register is invalid".title()
+        list_of_errors.append(error_string)
+        error_has_occurred()
+    else:
+        s += d[instruct[1]]
+        string=instruct[2]
+        number = int(''.join(filter(str.isdigit, string)))
+        fg = format(number, '07b')
+        s += fg
+        list_output.append(s)
+
+
+def type_I(instruct,list_output):
+    s=""
+    s += "10011"
+    s += "0"*2
+    value1=check_for_valid_registers(instruct[1])
+    value2=check_for_valid_registers(instruct[2])
+    value3=check_for_valid_registers(instruct[3])
+    if(value1==-1 or value2==-1 or value3==-1):#register is wrong
+        error_string="register is invalid".title()
+        list_of_errors.append(error_string)
+        error_has_occurred()
+    else:
+        s += d[instruct[1]]
+        s += d[instruct[2]]
+        s += d[instruct[3]]
+        list_output.append(s)
+
+def type_J(instruct,list_output):
+    s=""
+    s += "10100"
+    s += "0"*8
+    val=check_for_valid_registers(instruct[1])
+    if(val==-1):
+        error_string="register is invalid".title()
+        list_of_errors.append(error_string)
+        error_has_occurred()
+    else:
+        s += d[instruct[1]]
+        list_output.append(s)
+
+def type_K(instruct,list_output):
+    s=""
+    s += "10101"
+    s += "0"*8
+    val=check_for_valid_registers(instruct[1])
+    if(val==-1):
+        error_string="register is invalid".title()
+        list_of_errors.append(error_string)
+        error_has_occurred()
+    else:
+        s += d[instruct[1]]
+        list_output.append(s)
 
 
 def check_for_valid_immediate_value(string):
@@ -302,6 +376,7 @@ def type_E(instruct,list_output):
         s += "0000"
         s += binary_line
     list_output.append(s)
+
 
 
     
@@ -485,6 +560,22 @@ try:
                         type_D(instruct,list_output)
                     elif result=='E':
                         type_E(instruct,list_output)
+                    
+                    elif result=="G":
+                        type_G(instruct,list_output)
+                    
+                    elif result=="H":
+                        type_H(instruct,list_output)
+
+                    elif result=="I":
+                        type_I(instruct,list_output)
+                    
+                    elif result=="J":
+                        type_J(instruct,list_output)
+                    
+                    elif result=="K":
+                        type_K(instruct,list_output)
+                
                 else:
                     # instrution not found
                     if(instruct[1] in possible_instructuion):      #valid 
@@ -524,4 +615,3 @@ else:
     '''with open("output.txt","w") as f:
         f.write("syntax error\n".title())
         f.write(list_of_errors[0])'''
-    
