@@ -434,43 +434,86 @@ def clr(s):
 
 def add_imm_reg(s):
     global register_value
+    global v_overflow_bit
+    global e_equal_bit
+    global l_less_than_bit
+    global g_greater_than_bit
     reg_a=registers[s[6:9]]
-    
     value=int(s[9:16],base=2)
     if(register_value[reg_a]+value > 65536):
         v_overflow_bit=1
+        l_less_than_bit=0
+        g_greater_than_bit=0
+        e_equal_bit=0
     register_value[reg_a] += value
+    v_overflow_bit=0
+    l_less_than_bit=0
+    e_equal_bit=0
+    g_greater_than_bit=0
+
 
 def increment(s):
     global register_value
+    global e_equal_bit
+    global g_greater_than_bit
+    global v_overflow_bit
+    global l_less_than_bit
     reg_a=registers[s[13:16]]
-
     if(register_value[reg_a]+1 > 65536):
         v_overflow_bit=1
+        e_equal_bit=0
+        l_less_than_bit=0
+        g_greater_than_bit=0
     else:
         register_value[reg_a] += 1
+        v_overflow_bit=0
+        e_equal_bit=0
+        l_less_than_bit=0
+        g_greater_than_bit=0
 
 
 def decrement(s):
     global register_value
+    global e_equal_bit
+    global g_greater_than_bit
+    global v_overflow_bit
+    global l_less_than_bit
     reg_a=registers[s[13:16]]
     if(register_value[reg_a]+1 > 65536):
         v_overflow_bit=1
+        e_equal_bit=0
+        l_less_than_bit=0
+        g_greater_than_bit=0
     else:
         register_value[reg_a] -= 1
+        v_overflow_bit=0
+        e_equal_bit=0
+        l_less_than_bit=0
+        g_greater_than_bit=0
 
 
 def exponential(s):
     global register_value
     global v_overflow_bit
+    global l_less_than_bit
+    global g_greater_than_bit
+    global e_equal_bit
     reg_a=registers[s[7:10]]
     reg_b=registers[s[10:13]]
     reg_c=registers[s[13:16]]
     #overflow
     if(register_value[reg_b]**register_value[reg_c] > 65536):
         v_overflow_bit=1
+        e_equal_bit=0
+        l_less_than_bit=0
+        g_greater_than_bit=0
     else:
         register_value[reg_a]=register_value[reg_b]**register_value[reg_c]
+        v_overflow_bit=0
+        e_equal_bit=0
+        l_less_than_bit=0
+        g_greater_than_bit=0
+
 
 #main
 
@@ -578,18 +621,28 @@ while((program_counter < max_program_length) and (instructions[program_counter][
     elif(instructions[program_counter][0:5]=="11001"):
         clr(instructions[program_counter])
         print_output()
+        program_counter+=1
+
     elif(instructions[program_counter][0:5]=="11110"):
         add_imm_reg(instructions[program_counter])
         print_output()
+        program_counter+=1
+
     elif(instructions[program_counter][0:5]=="10011"):
         exponential(instructions[program_counter])
         print_output()
+        program_counter+=1
+
     elif(instructions[program_counter][0:5]=="10100"):
         increment(instructions[program_counter])
         print_output()
+        program_counter+=1
+
     elif(instructions[program_counter][0:5]=="10101"):
         decrement(instructions[program_counter])
         print_output()
+        program_counter+=1
+
     
 v_overflow_bit=0
 e_equal_bit=0
