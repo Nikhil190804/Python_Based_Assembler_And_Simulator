@@ -10,7 +10,7 @@ d={"R0":"000",
 "FLAGS":"111"
 }
 
-#  type D instructions and opcode store
+#  type D instructions and opcode 
 ld="00100"
 st="00101"
 add="00000"
