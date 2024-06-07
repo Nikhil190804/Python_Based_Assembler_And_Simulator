@@ -5,10 +5,6 @@ Group Members Details:-
   
   Niket Agarwal - 2022320
   
-  Mohit Mehra - 2022301
-  
-  Pankaj  - 2022346
-  
   
 This is the repository for our group project for computer organization course .  
 We have added all the three folders which were given to us. And it contains the main script "Assembler.py" inside the Simple-Assembler folder , the run file inside it also contains the mentioned commands to run . 
