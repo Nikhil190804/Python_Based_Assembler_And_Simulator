@@ -4,6 +4,8 @@ Group Members Details:-
   Nikhil Kumar - 2022322
   
   Niket Agarwal - 2022320
+
+  Mohit Mehra -2022301
   
   
 This is the repository for our group project for computer organization course .  
